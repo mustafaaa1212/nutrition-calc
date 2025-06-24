@@ -140,6 +140,31 @@ class MealPlanner {
                 </div>
             </div>
         `).join('');
+        
+        // Add event listeners for quantity changes
+        container.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const ingredientId = parseInt(e.target.dataset.id);
+                const newQuantity = parseFloat(e.target.value) || 100;
+                if (newQuantity > 0 && newQuantity <= 5000) {
+                    this.updateIngredientQuantity(ingredientId, newQuantity);
+                } else {
+                    this.showWarning('Please enter a valid portion size (1-5000 grams).');
+                    const ingredient = this.selectedIngredients.find(ing => ing.id === ingredientId);
+                    if (ingredient) {
+                        e.target.value = ingredient.quantity;
+                    }
+                }
+            });
+        });
+        
+        // Add event listeners for removal
+        container.querySelectorAll('.remove-ingredient').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const ingredientId = parseInt(e.target.dataset.id);
+                this.removeIngredient(ingredientId);
+            });
+        });
     }
 
     addIngredient(ingredientItem) {
@@ -154,18 +179,35 @@ class MealPlanner {
             return;
         }
 
+        // Get portion size from input field if available
+        const portionInput = ingredientItem.querySelector('.portion-input');
+        const quantity = portionInput ? (parseFloat(portionInput.value) || 100) : 100;
+        
+        // Validate portion size
+        if (quantity <= 0 || quantity > 5000) {
+            this.showWarning('Please enter a valid portion size (1-5000 grams).');
+            return;
+        }
+
         // Add to selected ingredients
         const ingredient = {
             id: id,
             name: name,
             category: category,
             calories: calories,
-            quantity: 100 // default 100g
+            quantity: quantity
         };
 
         this.selectedIngredients.push(ingredient);
+        
+        // Clear the portion input if it exists
+        if (portionInput) {
+            portionInput.value = '';
+        }
+        
         this.updateSelectedIngredientsDisplay();
         this.updateSaveMealForm();
+        this.showSuccess(`${name} (${quantity}g) added to meal plan.`);
     }
 
     removeIngredient(ingredientId) {
@@ -182,7 +224,8 @@ class MealPlanner {
     updateIngredientQuantity(ingredientId, quantity) {
         const ingredient = this.selectedIngredients.find(ing => ing.id === ingredientId);
         if (ingredient) {
-            ingredient.quantity = Math.max(0, quantity);
+            ingredient.quantity = Math.max(1, quantity);
+            this.updateSelectedIngredientsDisplay();
             this.updateSaveMealForm();
         }
     }
@@ -202,27 +245,38 @@ class MealPlanner {
             return;
         }
 
-        container.innerHTML = this.selectedIngredients.map(ingredient => `
-            <div class="selected-ingredient">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <div>
-                        <strong>${ingredient.name}</strong>
-                        <small class="text-muted d-block">${ingredient.category}</small>
+        container.innerHTML = this.selectedIngredients.map(ingredient => {
+            const caloriesMatch = ingredient.calories.match(/[\d.]+/);
+            const caloriesValue = caloriesMatch ? parseFloat(caloriesMatch[0]) : 0;
+            const adjustedCalories = (caloriesValue * ingredient.quantity / 100).toFixed(1);
+            
+            return `
+                <div class="selected-ingredient border rounded p-3 mb-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">${ingredient.name} (${ingredient.quantity}g)</h6>
+                            <small class="text-muted">${ingredient.category}</small>
+                            <div class="mt-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <label class="form-label mb-0 small">Portion (g):</label>
+                                    <input type="number" class="form-control form-control-sm quantity-input" 
+                                           value="${ingredient.quantity}" 
+                                           data-id="${ingredient.id}"
+                                           min="1" max="5000" step="1" style="width: 80px;">
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge bg-primary">${adjustedCalories} calories</span>
+                                    <small class="text-muted ms-2">(${caloriesValue} cal/100g)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger remove-ingredient" data-id="${ingredient.id}">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
-                    <button class="btn btn-sm btn-outline-danger remove-ingredient" data-id="${ingredient.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
                 </div>
-                <div class="d-flex align-items-center">
-                    <label class="form-label me-2 mb-0">Quantity:</label>
-                    <input type="number" class="form-control quantity-input" 
-                           value="${ingredient.quantity}" 
-                           data-id="${ingredient.id}"
-                           min="0" step="1">
-                    <span class="ms-2 text-muted">grams</span>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     updateSaveMealForm() {
