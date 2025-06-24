@@ -1,0 +1,240 @@
+/* Custom styles for Nutrition Calculator */
+
+/* Base styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Hero section */
+.jumbotron {
+    background: linear-gradient(135deg, var(--bs-primary), var(--bs-info));
+    border: none;
+}
+
+/* Cards */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid var(--bs-border-color);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ingredient items */
+.ingredient-item {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    background: var(--bs-body-bg);
+}
+
+.ingredient-item:hover {
+    background: var(--bs-secondary-bg);
+    border-color: var(--bs-primary) !important;
+}
+
+.ingredient-item.selected {
+    background: var(--bs-primary-bg-subtle);
+    border-color: var(--bs-primary) !important;
+}
+
+/* Selected ingredients */
+.selected-ingredient {
+    background: var(--bs-light-bg-subtle);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.selected-ingredient:hover {
+    border-color: var(--bs-primary);
+}
+
+/* Quantity input */
+.quantity-input {
+    width: 80px;
+    text-align: center;
+}
+
+/* Nutrition results */
+#nutritionResults {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Chart containers */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin: 1rem 0;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--bs-secondary);
+    border-radius: 50%;
+    border-top-color: var(--bs-primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .ingredient-list {
+        max-height: 300px !important;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .selected-ingredient {
+        padding: 0.75rem;
+    }
+    
+    .quantity-input {
+        width: 70px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar, .btn, .card-header .btn {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+    }
+    
+    body {
+        color: #000 !important;
+        background: #fff !important;
+    }
+}
+
+/* Utility classes */
+.text-small {
+    font-size: 0.875rem;
+}
+
+.border-dashed {
+    border-style: dashed !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Custom button styles */
+.btn-outline-primary:hover,
+.btn-outline-success:hover,
+.btn-outline-warning:hover,
+.btn-outline-danger:hover {
+    transform: translateY(-1px);
+}
+
+/* Flash messages */
+.alert {
+    border-left: 4px solid;
+    border-radius: 0.375rem;
+}
+
+.alert-success {
+    border-left-color: var(--bs-success);
+}
+
+.alert-danger {
+    border-left-color: var(--bs-danger);
+}
+
+.alert-warning {
+    border-left-color: var(--bs-warning);
+}
+
+.alert-info {
+    border-left-color: var(--bs-info);
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+.form-control:focus,
+.form-select:focus,
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Ingredient search results */
+.search-results {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    background: var(--bs-body-bg);
+}
+
+.search-result-item {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--bs-border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.search-result-item:hover {
+    background: var(--bs-secondary-bg);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--bs-secondary);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}

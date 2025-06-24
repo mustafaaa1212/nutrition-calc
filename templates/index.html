@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Nutrition Calculator{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Hero Section -->
+    <div class="col-12 mb-5">
+        <div class="jumbotron bg-primary text-white p-5 rounded">
+            <h1 class="display-4">
+                <i class="fas fa-calculator"></i> Nutrition Calculator
+            </h1>
+            <p class="lead">Plan your meals, calculate nutritional values, and maintain a healthy lifestyle with our professional nutrition calculator.</p>
+            <hr class="my-4">
+            <p>Select ingredients, specify quantities, and get detailed nutritional breakdowns for your meals.</p>
+            <a class="btn btn-light btn-lg" href="{{ url_for('meal_planner') }}" role="button">
+                <i class="fas fa-utensils"></i> Start Meal Planning
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Features -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Ingredient Search</h5>
+                <p class="card-text">Search through our comprehensive database of ingredients with detailed nutritional information.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-bar fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Real-time Calculations</h5>
+                <p class="card-text">Get instant nutritional calculations as you add ingredients to your meal plan.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-save fa-3x text-info mb-3"></i>
+                <h5 class="card-title">Save Meals</h5>
+                <p class="card-text">Save your favorite meal combinations for quick access and future meal planning.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <!-- Statistics -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-database"></i> Database Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h3 class="text-primary">{{ ingredient_count }}</h3>
+                        <p class="mb-0">Ingredients Available</p>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-success">15+</h3>
+                        <p class="mb-0">Nutritional Values</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Data Upload -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-upload"></i> Upload Nutrition Data</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('upload_data') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Upload Excel or CSV file</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".xlsx,.csv">
+                        <div class="form-text">Supported formats: Excel (.xlsx), CSV (.csv)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload and Process
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{ url_for('meal_planner') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-plus"></i> Create New Meal
+                    </a>
+                    <a href="{{ url_for('meal_planner') }}?category=vegetables" class="btn btn-outline-success">
+                        <i class="fas fa-carrot"></i> Browse Vegetables
+                    </a>
+                    <a href="{{ url_for('meal_planner') }}?category=fruits" class="btn btn-outline-warning">
+                        <i class="fas fa-apple-alt"></i> Browse Fruits
+                    </a>
+                    <a href="{{ url_for('meal_planner') }}?category=proteins" class="btn btn-outline-danger">
+                        <i class="fas fa-drumstick-bite"></i> Browse Proteins
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

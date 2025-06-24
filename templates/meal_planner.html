@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Meal Planner - Nutrition Calculator{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="fas fa-utensils"></i> Meal Planner</h1>
+        <p class="lead">Select ingredients and quantities to calculate nutritional values for your meal.</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Ingredient Selection -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-search"></i> Ingredient Selection</h5>
+            </div>
+            <div class="card-body">
+                <!-- Search and Filter -->
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="ingredientSearch" placeholder="Search ingredients...">
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="categoryFilter">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Ingredient List -->
+                <div class="ingredient-list" style="max-height: 400px; overflow-y: auto;">
+                    <div id="ingredientResults">
+                        {% for ingredient in ingredients[:20] %}
+                        <div class="ingredient-item border rounded p-2 mb-2" data-id="{{ ingredient.id }}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ ingredient.name }}</strong>
+                                    <small class="text-muted d-block">{{ ingredient.category or 'Unknown' }}</small>
+                                    <small class="text-info">{{ ingredient.calories }} cal/100g</small>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary add-ingredient">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Manual Ingredient Addition -->
+                <div class="mt-3">
+                    <h6>Can't find an ingredient?</h6>
+                    <form method="POST" action="{{ url_for('scrape_ingredient') }}" class="d-flex gap-2">
+                        <input type="text" class="form-control" name="ingredient_name" placeholder="Enter ingredient name">
+                        <button type="submit" class="btn btn-outline-secondary">
+                            <i class="fas fa-globe"></i> Search Online
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Selected Ingredients -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="fas fa-list"></i> Selected Ingredients</h5>
+                <button class="btn btn-sm btn-outline-primary" id="calculateBtn">
+                    <i class="fas fa-calculator"></i> Calculate
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="selectedIngredients">
+                    <div class="text-muted text-center py-4">
+                        <i class="fas fa-utensils fa-3x mb-3"></i>
+                        <p>No ingredients selected yet.</p>
+                        <p>Select ingredients from the left panel to start building your meal.</p>
+                    </div>
+                </div>
+                
+                <!-- Save Meal Form -->
+                <div id="saveMealForm" style="display: none;" class="mt-3 pt-3 border-top">
+                    <form method="POST" action="{{ url_for('save_meal') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="meal_name" placeholder="Meal name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" name="meal_description" placeholder="Description (optional)">
+                            </div>
+                        </div>
+                        <input type="hidden" name="ingredients_data" id="ingredientsData">
+                        <button type="submit" class="btn btn-success btn-sm mt-2">
+                            <i class="fas fa-save"></i> Save Meal
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nutrition Results -->
+<div class="row mt-4" id="nutritionResults" style="display: none;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-bar"></i> Nutritional Breakdown</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Nutrition Chart -->
+                    <div class="col-lg-6">
+                        <canvas id="nutritionChart" width="400" height="300"></canvas>
+                    </div>
+                    
+                    <!-- Nutrition Table -->
+                    <div class="col-lg-6">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nutrient</th>
+                                        <th>Amount</th>
+                                        <th>Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="nutritionTable">
+                                    <!-- Populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Detailed Breakdown -->
+                <div class="mt-4">
+                    <h6>Ingredient Breakdown</h6>
+                    <div id="ingredientBreakdown" class="row">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/meal_planner.js') }}"></script>
+{% endblock %}
