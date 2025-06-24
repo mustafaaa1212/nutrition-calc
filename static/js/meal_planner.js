@@ -126,20 +126,33 @@ class MealPlanner {
             return;
         }
 
-        container.innerHTML = ingredients.map(ingredient => `
-            <div class="ingredient-item border rounded p-2 mb-2" data-id="${ingredient.id}">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>${ingredient.name}</strong>
-                        <small class="text-muted d-block">${ingredient.category || 'Unknown'}</small>
-                        <small class="text-info">${ingredient.calories} cal/100g</small>
+        container.innerHTML = ingredients.map(ingredient => {
+            // Check if ingredient is already selected
+            const isSelected = this.selectedIngredients.find(ing => ing.id === ingredient.id);
+            const buttonClass = isSelected ? 'btn-secondary disabled' : 'btn-outline-primary';
+            const buttonText = isSelected ? 'Added' : 'Add';
+            const buttonIcon = isSelected ? 'fa-check' : 'fa-plus';
+            
+            return `
+                <div class="ingredient-item border rounded p-2 mb-2" data-id="${ingredient.id}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${ingredient.name}</strong>
+                            <small class="text-muted d-block">${ingredient.category || 'Unknown'}</small>
+                            <small class="text-info">${ingredient.calories} cal/100g</small>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="number" class="form-control form-control-sm portion-input" 
+                                   placeholder="grams" min="1" max="5000" step="1" style="width: 80px;"
+                                   ${isSelected ? 'disabled' : ''}>
+                            <button class="btn btn-sm ${buttonClass} add-ingredient" ${isSelected ? 'disabled' : ''}>
+                                <i class="fas ${buttonIcon}"></i> ${buttonText}
+                            </button>
+                        </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-primary add-ingredient">
-                        <i class="fas fa-plus"></i> Add
-                    </button>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
         
         // Add event listeners for quantity changes
         container.querySelectorAll('.quantity-input').forEach(input => {
@@ -175,7 +188,7 @@ class MealPlanner {
 
         // Check if already added
         if (this.selectedIngredients.find(ing => ing.id === id)) {
-            this.showWarning('Ingredient already added to meal');
+            this.showWarning(`${name} is already in your meal plan`);
             return;
         }
 
@@ -207,17 +220,29 @@ class MealPlanner {
         
         this.updateSelectedIngredientsDisplay();
         this.updateSaveMealForm();
-        this.showSuccess(`${name} (${quantity}g) added to meal plan.`);
+        
+        // Refresh the ingredient list to update button states
+        this.searchIngredients();
+        
+        this.showSuccess(`${name} (${quantity}g) added to meal plan`);
     }
 
     removeIngredient(ingredientId) {
+        const removedIngredient = this.selectedIngredients.find(ing => ing.id === ingredientId);
         this.selectedIngredients = this.selectedIngredients.filter(ing => ing.id !== ingredientId);
         this.updateSelectedIngredientsDisplay();
         this.updateSaveMealForm();
         
+        // Refresh the ingredient list to show the add button again
+        this.searchIngredients();
+        
         // Hide nutrition results if no ingredients
         if (this.selectedIngredients.length === 0) {
             document.getElementById('nutritionResults').style.display = 'none';
+        }
+        
+        if (removedIngredient) {
+            this.showSuccess(`${removedIngredient.name} removed from meal plan`);
         }
     }
 
@@ -254,7 +279,7 @@ class MealPlanner {
                 <div class="selected-ingredient border rounded p-3 mb-2">
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="flex-grow-1">
-                            <h6 class="mb-1">${ingredient.name} (${ingredient.quantity}g)</h6>
+                            <h6 class="mb-1"><strong>${ingredient.name}</strong> (${ingredient.quantity}g)</h6>
                             <small class="text-muted">${ingredient.category}</small>
                             <div class="mt-2">
                                 <div class="d-flex align-items-center gap-2">
