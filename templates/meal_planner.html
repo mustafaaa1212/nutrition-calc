@@ -56,12 +56,589 @@
                 <!-- Manual Ingredient Addition -->
                 <div class="mt-3">
                     <h6>Can't find an ingredient?</h6>
-                    <form method="POST" action="{{ url_for('scrape_ingredient') }}" class="d-flex gap-2">
+                    <form method="POST" action="{{ url_for('scrape_ingredient') }}" class="d-flex gap-2 mb-2">
                         <input type="text" class="form-control" name="ingredient_name" placeholder="Enter ingredient name">
                         <button type="submit" class="btn btn-outline-secondary">
                             <i class="fas fa-globe"></i> Search Online
                         </button>
                     </form>
+                    
+                    <!-- Manual Entry Button -->
+                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#manualEntryForm" aria-expanded="false" aria-controls="manualEntryForm">
+                        <i class="fas fa-edit"></i> Add Manually
+                    </button>
+                    
+                    <!-- Manual Entry Form -->
+                    <div class="collapse mt-3" id="manualEntryForm">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-plus"></i> Add New Ingredient</h6>
+                            </div>
+                            <div class="card-body">
+                                <form method="POST" action="{{ url_for('add_manual_ingredient') }}">
+                                    <div class="row mb-3">
+                                        <div class="col-md-8">
+                                            <label for="ingredientName" class="form-label">Ingredient Name *</label>
+                                            <input type="text" class="form-control" id="ingredientName" name="name" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="ingredientCategory" class="form-label">Category</label>
+                                            <select class="form-select" id="ingredientCategory" name="category">
+                                                <option value="">Select category</option>
+                                                <option value="Vegetables">Vegetables</option>
+                                                <option value="Fruits">Fruits</option>
+                                                <option value="Proteins">Proteins</option>
+                                                <option value="Grains">Grains</option>
+                                                <option value="Dairy">Dairy</option>
+                                                <option value="Nuts">Nuts</option>
+                                                <option value="Beverages">Beverages</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <small class="text-muted">All values are per 100g of the ingredient</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Macronutrients -->
+                                    <h6 class="text-primary mb-2">Macronutrients</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label for="calories" class="form-label">Calories (kcal)</label>
+                                            <input type="number" class="form-control" id="calories" name="calories" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="protein" class="form-label">Protein (g)</label>
+                                            <input type="number" class="form-control" id="protein" name="protein" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="carbs" class="form-label">Carbs (g)</label>
+                                            <input type="number" class="form-control" id="carbs" name="carbs" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="fat" class="form-label">Fat (g)</label>
+                                            <input type="number" class="form-control" id="fat" name="fat" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Additional nutrients -->
+                                    <h6 class="text-success mb-2">Additional Nutrients</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="fiber" class="form-label">Fiber (g)</label>
+                                            <input type="number" class="form-control" id="fiber" name="fiber" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="sugar" class="form-label">Sugar (g)</label>
+                                            <input type="number" class="form-control" id="sugar" name="sugar" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="sodium" class="form-label">Sodium (mg)</label>
+                                            <input type="number" class="form-control" id="sodium" name="sodium" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Minerals -->
+                                    <h6 class="text-warning mb-2">Minerals</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="potassium" class="form-label">Potassium (mg)</label>
+                                            <input type="number" class="form-control" id="potassium" name="potassium" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="calcium" class="form-label">Calcium (mg)</label>
+                                            <input type="number" class="form-control" id="calcium" name="calcium" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="iron" class="form-label">Iron (mg)</label>
+                                            <input type="number" class="form-control" id="iron" name="iron" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Vitamins -->
+                                    <h6 class="text-info mb-2">Vitamins</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label for="vitamin_a" class="form-label">Vitamin A (IU)</label>
+                                            <input type="number" class="form-control" id="vitamin_a" name="vitamin_a" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="vitamin_c" class="form-label">Vitamin C (mg)</label>
+                                            <input type="number" class="form-control" id="vitamin_c" name="vitamin_c" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="vitamin_d" class="form-label">Vitamin D (IU)</label>
+                                            <input type="number" class="form-control" id="vitamin_d" name="vitamin_d" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="vitamin_e" class="form-label">Vitamin E (mg)</label>
+                                            <input type="number" class="form-control" id="vitamin_e" name="vitamin_e" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label for="vitamin_k" class="form-label">Vitamin K (mcg)</label>
+                                            <input type="number" class="form-control" id="vitamin_k" name="vitamin_k" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-save"></i> Add Ingredient
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#manualEntryForm">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                                        <div class="col-md-3">
+                                            <label for="fat" class="form-label">Fat (g)</label>
+                                            <input type="number" class="form-control" id="fat" name="fat" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Additional nutrients -->
+                                    <h6 class="text-secondary mb-2">Additional Nutrients</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="fiber" class="form-label">Fiber (g)</label>
+                                            <input type="number" class="form-control" id="fiber" name="fiber" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="sugar" class="form-label">Sugar (g)</label>
+                                            <input type="number" class="form-control" id="sugar" name="sugar" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="sodium" class="form-label">Sodium (mg)</label>
+                                            <input type="number" class="form-control" id="sodium" name="sodium" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Minerals -->
+                                    <h6 class="text-warning mb-2">Minerals</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label for="potassium" class="form-label">Potassium (mg)</label>
+                                            <input type="number" class="form-control" id="potassium" name="potassium" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="calcium" class="form-label">Calcium (mg)</label>
+                                            <input type="number" class="form-control" id="calcium" name="calcium" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="iron" class="form-label">Iron (mg)</label>
+                                            <input type="number" class="form-control" id="iron" name="iron" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Vitamins -->
+                                    <h6 class="text-success mb-2">Vitamins</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label for="vitamin_a" class="form-label">Vitamin A (IU)</label>
+                                            <input type="number" class="form-control" id="vitamin_a" name="vitamin_a" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="vitamin_c" class="form-label">Vitamin C (mg)</label>
+                                            <input type="number" class="form-control" id="vitamin_c" name="vitamin_c" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="vitamin_d" class="form-label">Vitamin D (IU)</label>
+                                            <input type="number" class="form-control" id="vitamin_d" name="vitamin_d" step="0.1" min="0" value="0">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="vitamin_e" class="form-label">Vitamin E (mg)</label>
+                                            <input type="number" class="form-control" id="vitamin_e" name="vitamin_e" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label for="vitamin_k" class="form-label">Vitamin K (mcg)</label>
+                                            <input type="number" class="form-control" id="vitamin_k" name="vitamin_k" step="0.1" min="0" value="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-save"></i> Add Ingredient
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#manualEntryForm">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                                            <select class="form-select" name="category" id="category">
+                                                <option value="">Select category</option>
+                                                <option value="Vegetables">Vegetables</option>
+                                                <option value="Fruits">Fruits</option>
+                                                <option value="Proteins">Proteins</option>
+                                                <option value="Grains">Grains</option>
+                                                <option value="Nuts">Nuts</option>
+                                                <option value="Dairy">Dairy</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <h6 class="text-muted mb-3">Nutritional Values (per 100g)</h6>
+                                    
+                                    <!-- Basic Macronutrients -->
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <label for="calories" class="form-label">Calories (kcal)</label>
+                                            <input type="number" class="form-control" name="calories" id="calories" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="protein" class="form-label">Protein (g)</label>
+                                            <input type="number" class="form-control" name="protein" id="protein" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="carbs" class="form-label">Carbs (g)</label>
+                                            <input type="number" class="form-control" name="carbs" id="carbs" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="fat" class="form-label">Fat (g)</label>
+                                            <input type="number" class="form-control" name="fat" id="fat" step="0.1" min="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Additional Nutrients -->
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="fiber" class="form-label">Fiber (g)</label>
+                                            <input type="number" class="form-control" name="fiber" id="fiber" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="sugar" class="form-label">Sugar (g)</label>
+                                            <input type="number" class="form-control" name="sugar" id="sugar" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="sodium" class="form-label">Sodium (mg)</label>
+                                            <input type="number" class="form-control" name="sodium" id="sodium" step="0.1" min="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Minerals -->
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="potassium" class="form-label">Potassium (mg)</label>
+                                            <input type="number" class="form-control" name="potassium" id="potassium" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="calcium" class="form-label">Calcium (mg)</label>
+                                            <input type="number" class="form-control" name="calcium" id="calcium" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="iron" class="form-label">Iron (mg)</label>
+                                            <input type="number" class="form-control" name="iron" id="iron" step="0.1" min="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Vitamins -->
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_a" class="form-label">Vitamin A (IU)</label>
+                                            <input type="number" class="form-control" name="vitamin_a" id="vitamin_a" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_c" class="form-label">Vitamin C (mg)</label>
+                                            <input type="number" class="form-control" name="vitamin_c" id="vitamin_c" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_d" class="form-label">Vitamin D (IU)</label>
+                                            <input type="number" class="form-control" name="vitamin_d" id="vitamin_d" step="0.1" min="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_e" class="form-label">Vitamin E (mg)</label>
+                                            <input type="number" class="form-control" name="vitamin_e" id="vitamin_e" step="0.1" min="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="vitamin_k" class="form-label">Vitamin K (mcg)</label>
+                                            <input type="number" class="form-control" name="vitamin_k" id="vitamin_k" step="0.1" min="0">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-plus"></i> Add Ingredient
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#manualEntryForm">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manual Entry Form (Collapsible) -->
+                <div class="collapse mt-3" id="manualEntryForm">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-plus"></i> Add Custom Ingredient</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('add_manual_ingredient') }}">
+                                <!-- Basic Information -->
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                        <label for="name" class="form-label">Ingredient Name *</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="category" class="form-label">Category</label>
+                                        <select class="form-select" id="category" name="category">
+                                            <option value="">Select Category</option>
+                                            <option value="Vegetables">Vegetables</option>
+                                            <option value="Fruits">Fruits</option>
+                                            <option value="Proteins">Proteins</option>
+                                            <option value="Grains">Grains</option>
+                                            <option value="Dairy">Dairy</option>
+                                            <option value="Nuts">Nuts</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Macronutrients -->
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h6 class="text-primary">Macronutrients (per 100g)</h6>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="calories" class="form-label">Calories (kcal)</label>
+                                        <input type="number" class="form-control" id="calories" name="calories" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="protein" class="form-label">Protein (g)</label>
+                                        <input type="number" class="form-control" id="protein" name="protein" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="carbs" class="form-label">Carbs (g)</label>
+                                        <input type="number" class="form-control" id="carbs" name="carbs" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="fat" class="form-label">Fat (g)</label>
+                                        <input type="number" class="form-control" id="fat" name="fat" step="0.1" min="0">
+                                    </div>
+                                </div>
+                                
+                                <!-- Additional Nutrients -->
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h6 class="text-success">Additional Nutrients</h6>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="fiber" class="form-label">Fiber (g)</label>
+                                        <input type="number" class="form-control" id="fiber" name="fiber" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="sugar" class="form-label">Sugar (g)</label>
+                                        <input type="number" class="form-control" id="sugar" name="sugar" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="sodium" class="form-label">Sodium (mg)</label>
+                                        <input type="number" class="form-control" id="sodium" name="sodium" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="potassium" class="form-label">Potassium (mg)</label>
+                                        <input type="number" class="form-control" id="potassium" name="potassium" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="calcium" class="form-label">Calcium (mg)</label>
+                                        <input type="number" class="form-control" id="calcium" name="calcium" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="iron" class="form-label">Iron (mg)</label>
+                                        <input type="number" class="form-control" id="iron" name="iron" step="0.1" min="0">
+                                    </div>
+                                </div>
+                                
+                                <!-- Vitamins -->
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <h6 class="text-warning">Vitamins</h6>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="vitamin_a" class="form-label">Vitamin A (IU)</label>
+                                        <input type="number" class="form-control" id="vitamin_a" name="vitamin_a" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="vitamin_c" class="form-label">Vitamin C (mg)</label>
+                                        <input type="number" class="form-control" id="vitamin_c" name="vitamin_c" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="vitamin_d" class="form-label">Vitamin D (IU)</label>
+                                        <input type="number" class="form-control" id="vitamin_d" name="vitamin_d" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="vitamin_e" class="form-label">Vitamin E (mg)</label>
+                                        <input type="number" class="form-control" id="vitamin_e" name="vitamin_e" step="0.1" min="0">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="vitamin_k" class="form-label">Vitamin K (mcg)</label>
+                                        <input type="number" class="form-control" id="vitamin_k" name="vitamin_k" step="0.1" min="0">
+                                    </div>
+                                </div>
+                                
+                                <!-- Submit Button -->
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#manualEntryForm">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Add Ingredient
+                                    </button>
+                                </div>
+                                
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle"></i> 
+                                        All nutritional values should be per 100g. Only ingredient name is required.
+                                    </small>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Manual Entry Form -->
+                <div class="collapse mt-3" id="manualEntryForm">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-plus"></i> Add Custom Ingredient</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('add_manual_ingredient') }}">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name" class="form-label">Ingredient Name *</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="category" class="form-label">Category</label>
+                                        <select class="form-select" id="category" name="category">
+                                            <option value="">Select category</option>
+                                            <option value="Vegetables">Vegetables</option>
+                                            <option value="Fruits">Fruits</option>
+                                            <option value="Proteins">Proteins</option>
+                                            <option value="Grains">Grains</option>
+                                            <option value="Dairy">Dairy</option>
+                                            <option value="Nuts">Nuts</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mb-2">Nutrition Facts (per 100g)</h6>
+                                <div class="row">
+                                    <!-- Macronutrients -->
+                                    <div class="col-md-3 mb-3">
+                                        <label for="calories" class="form-label">Calories</label>
+                                        <input type="number" class="form-control" id="calories" name="calories" step="0.1" min="0" placeholder="0">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="protein" class="form-label">Protein (g)</label>
+                                        <input type="number" class="form-control" id="protein" name="protein" step="0.1" min="0" placeholder="0">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="carbs" class="form-label">Carbs (g)</label>
+                                        <input type="number" class="form-control" id="carbs" name="carbs" step="0.1" min="0" placeholder="0">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="fat" class="form-label">Fat (g)</label>
+                                        <input type="number" class="form-control" id="fat" name="fat" step="0.1" min="0" placeholder="0">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Additional nutrients -->
+                                    <div class="col-md-3 mb-3">
+                                        <label for="fiber" class="form-label">Fiber (g)</label>
+                                        <input type="number" class="form-control" id="fiber" name="fiber" step="0.1" min="0" placeholder="0">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="sugar" class="form-label">Sugar (g)</label>
+                                        <input type="number" class="form-control" id="sugar" name="sugar" step="0.1" min="0" placeholder="0">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="sodium" class="form-label">Sodium (mg)</label>
+                                        <input type="number" class="form-control" id="sodium" name="sodium" step="0.1" min="0" placeholder="0">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="potassium" class="form-label">Potassium (mg)</label>
+                                        <input type="number" class="form-control" id="potassium" name="potassium" step="0.1" min="0" placeholder="0">
+                                    </div>
+                                </div>
+                                
+                                <!-- Vitamins and Minerals (Collapsible) -->
+                                <div class="mb-3">
+                                    <button class="btn btn-link p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#vitaminsSection" aria-expanded="false">
+                                        <i class="fas fa-chevron-down"></i> Vitamins & Minerals (Optional)
+                                    </button>
+                                </div>
+                                
+                                <div class="collapse" id="vitaminsSection">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <label for="calcium" class="form-label">Calcium (mg)</label>
+                                            <input type="number" class="form-control" id="calcium" name="calcium" step="0.1" min="0" placeholder="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="iron" class="form-label">Iron (mg)</label>
+                                            <input type="number" class="form-control" id="iron" name="iron" step="0.1" min="0" placeholder="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_a" class="form-label">Vitamin A (IU)</label>
+                                            <input type="number" class="form-control" id="vitamin_a" name="vitamin_a" step="0.1" min="0" placeholder="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_c" class="form-label">Vitamin C (mg)</label>
+                                            <input type="number" class="form-control" id="vitamin_c" name="vitamin_c" step="0.1" min="0" placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_d" class="form-label">Vitamin D (IU)</label>
+                                            <input type="number" class="form-control" id="vitamin_d" name="vitamin_d" step="0.1" min="0" placeholder="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_e" class="form-label">Vitamin E (mg)</label>
+                                            <input type="number" class="form-control" id="vitamin_e" name="vitamin_e" step="0.1" min="0" placeholder="0">
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="vitamin_k" class="form-label">Vitamin K (mcg)</label>
+                                            <input type="number" class="form-control" id="vitamin_k" name="vitamin_k" step="0.1" min="0" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save"></i> Add Ingredient
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#manualEntryForm">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

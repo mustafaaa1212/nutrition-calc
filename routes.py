@@ -213,11 +213,79 @@ def scrape_ingredient():
         if success:
             flash(f'Successfully scraped nutrition data for {ingredient_name}', 'success')
         else:
-            flash(f'Could not find nutrition data for {ingredient_name}', 'warning')
+            flash(f'Could not find nutrition data for {ingredient_name}. You can add it manually below.', 'warning')
             
     except Exception as e:
         logger.error(f"Error scraping ingredient {ingredient_name}: {e}")
         flash('Error scraping ingredient data', 'error')
+    
+    return redirect(url_for('meal_planner'))
+
+@app.route('/add-manual-ingredient', methods=['POST'])
+def add_manual_ingredient():
+    """Add ingredient with manual nutrition data"""
+    try:
+        # Get form data
+        name = request.form.get('name', '').strip()
+        category = request.form.get('category', '').strip()
+        calories = float(request.form.get('calories', 0))
+        protein = float(request.form.get('protein', 0))
+        carbs = float(request.form.get('carbs', 0))
+        fat = float(request.form.get('fat', 0))
+        fiber = float(request.form.get('fiber', 0))
+        sugar = float(request.form.get('sugar', 0))
+        sodium = float(request.form.get('sodium', 0))
+        potassium = float(request.form.get('potassium', 0))
+        calcium = float(request.form.get('calcium', 0))
+        iron = float(request.form.get('iron', 0))
+        vitamin_a = float(request.form.get('vitamin_a', 0))
+        vitamin_c = float(request.form.get('vitamin_c', 0))
+        vitamin_d = float(request.form.get('vitamin_d', 0))
+        vitamin_e = float(request.form.get('vitamin_e', 0))
+        vitamin_k = float(request.form.get('vitamin_k', 0))
+        
+        if not name:
+            flash('Ingredient name is required', 'error')
+            return redirect(url_for('meal_planner'))
+        
+        # Check if ingredient already exists
+        existing = Ingredient.query.filter_by(name=name).first()
+        if existing:
+            flash(f'Ingredient "{name}" already exists in database', 'warning')
+            return redirect(url_for('meal_planner'))
+        
+        # Create new ingredient
+        ingredient = Ingredient(
+            name=name,
+            category=category or 'User Added',
+            calories=calories,
+            protein=protein,
+            carbs=carbs,
+            fat=fat,
+            fiber=fiber,
+            sugar=sugar,
+            sodium=sodium,
+            potassium=potassium,
+            calcium=calcium,
+            iron=iron,
+            vitamin_a=vitamin_a,
+            vitamin_c=vitamin_c,
+            vitamin_d=vitamin_d,
+            vitamin_e=vitamin_e,
+            vitamin_k=vitamin_k
+        )
+        
+        db.session.add(ingredient)
+        db.session.commit()
+        
+        flash(f'Successfully added "{name}" to the database', 'success')
+        
+    except ValueError as e:
+        flash('Please enter valid numbers for nutritional values', 'error')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error adding manual ingredient: {e}")
+        flash('Error adding ingredient to database', 'error')
     
     return redirect(url_for('meal_planner'))
 
