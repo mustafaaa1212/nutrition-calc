@@ -99,6 +99,9 @@ Recent updates:
 - Implemented backend route for manual ingredient submission
 - Fixed form duplication issues for cleaner user interface
 - Cleaned up meal planner template to have single manual entry section
+- Added portion size functionality with gram-based calculations
+- Enhanced calculator to handle custom portion sizes for accurate nutrition
+- Updated UI to show portion inputs and adjusted calorie displays
 - Added Render deployment configuration files and documentation
 - Configured PostgreSQL support for production deployment
 
