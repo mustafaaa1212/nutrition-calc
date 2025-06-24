@@ -93,5 +93,19 @@ Preferred communication style: Simple, everyday language.
 
 ## Changelog
 
-Changelog:
-- June 24, 2025. Initial setup
+Recent updates:
+- June 24, 2025: Enhanced meal planner with manual ingredient addition
+- Added comprehensive nutrition entry form with organized field categories
+- Implemented backend route for manual ingredient submission
+- Fixed form duplication issues for cleaner user interface
+- Cleaned up meal planner template to have single manual entry section
+- Added Render deployment configuration files and documentation
+- Configured PostgreSQL support for production deployment
+
+## Deployment
+
+The application is ready for deployment on Render with:
+- PostgreSQL database support
+- Environment variable configuration
+- Production-ready gunicorn server
+- One-click deployment via render.yaml blueprint

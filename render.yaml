@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: nutrition-calculator
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT main:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nutrition-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.6
+
+databases:
+  - name: nutrition-db
+    databaseName: nutrition_calculator
+    user: nutrition_user
