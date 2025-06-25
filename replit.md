@@ -102,7 +102,9 @@ Recent updates:
 - Added portion size functionality with gram-based calculations
 - Enhanced calculator to handle custom portion sizes for accurate nutrition
 - Updated UI to show portion inputs and adjusted calorie displays
-- Added Render deployment configuration files and documentation
+- Implemented duplicate ingredient prevention with clear visual feedback
+- Added proper requirements.txt file for Render deployment
+- Enhanced deployment configuration with production optimizations
 - Configured PostgreSQL support for production deployment
 
 ## Deployment

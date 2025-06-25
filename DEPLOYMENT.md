@@ -19,8 +19,8 @@
    - Configure the service:
      - **Name**: nutrition-calculator
      - **Environment**: Python 3
-     - **Build Command**: `pip install -r requirements.txt`
-     - **Start Command**: `gunicorn --bind 0.0.0.0:$PORT main:app`
+     - **Build Command**: `pip install --upgrade pip && pip install -r requirements.txt`
+     - **Start Command**: `gunicorn --bind 0.0.0.0:$PORT --workers 2 main:app`
      - **Instance Type**: Free tier
 
 3. **Add Environment Variables**
